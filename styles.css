@@ -1,0 +1,71 @@
+* {
+    box-sizing: border-box;
+    font-family: "Tektur", sans-serif;
+}
+
+main {
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+.main-container {
+    margin: 0 auto;
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    border-radius: 25px;
+    padding: 15px;
+    background-color: #ffe0e5;
+}
+
+.main-container .header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.main-container .header .title {
+    font-family: "Oi", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    color: #06a2de;
+
+}
+
+.main-container .form-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.main-container .form-wrapper .todos-input-form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+    padding: 0 15px;
+}
+
+.main-container .form-wrapper .todos-input-form .todos-input {
+    width: 100%;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    outline: none;
+}
+
+.main-container .form-wrapper .todos-input-form .action-button {
+    border: none;
+    border-radius: 15px;
+    padding: 11px;
+    font-size: 13px;
+    width: 220px;
+}
