@@ -3,6 +3,21 @@
     font-family: "Tektur", sans-serif;
 }
 
+.action-button {
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+body {
+    background-image: url(./images/pole2.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 main {
     margin-top: 10%;
     margin-bottom: 10%;
@@ -10,7 +25,7 @@ main {
 
 .main-container {
     margin: 0 auto;
-    max-width: 800px;
+    max-width: 850px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -20,6 +35,7 @@ main {
     border-radius: 25px;
     padding: 15px;
     background-color: #ffe0e5;
+    box-shadow: rgb(61 0 36 / 30%) 2px 8px 20px 17px;
 }
 
 .main-container .header {
@@ -34,8 +50,8 @@ main {
     font-family: "Oi", serif;
     font-weight: 400;
     font-style: normal;
-    font-size: 30px;
-    color: #06a2de;
+    font-size: 35px;
+    color: #00b8ff;
 
 }
 
@@ -60,13 +76,61 @@ main {
     border-radius: 20px;
     padding: 10px;
     outline: none;
+    font-size: 13px;
 }
 
 .main-container .form-wrapper .todos-input-form .action-button {
-    border: none;
-    border-radius: 15px;
-    padding: 11px;
-    font-size: 13px;
     width: 220px;
+    background-color: #00b7ff;
+    color: white;
 }
 
+.main-container .form-wrapper .todos-input-form .action-button:hover {
+    background-color: #00e2ff;
+}
+
+.main-container .tasks-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.main-container .tasks-list-wrapper .task-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 40px;
+}
+
+.main-container .footer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.main-container .footer .filter-buttons-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.main-container .footer .filter-buttons-wrapper .action-button {
+    background-color: #00b8ff8f;
+    color: white;
+}
+
+.main-container .footer .filter-buttons-wrapper .action-button:hover {
+    background-color: #00b7ffde;
+}
+
+/*класс для активной кнопки фильтра*/
+.main-container .footer .filter-buttons-wrapper .action-button.active {
+    background-color: #00b7ff;
+}
