@@ -77,6 +77,11 @@ main {
     padding: 10px;
     outline: none;
     font-size: 13px;
+    box-shadow: rgb(58 0 34 / 11%) 0px 1px 20px 2px;
+}
+
+.main-container .form-wrapper .todos-input-form .todos-input:focus {
+    box-shadow: rgba(58, 0, 34, 0.251) 0px 1px 20px 2px;
 }
 
 .main-container .form-wrapper .todos-input-form .action-button {
@@ -89,23 +94,115 @@ main {
     background-color: #00e2ff;
 }
 
+/* блок стилей для карточки таска */
 .main-container .tasks-list-wrapper {
+    width: 100%;
+}
+
+.main-container .tasks-list-wrapper .tasks-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
     align-items: center;
-    justify-content: center;
     width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding: 15px;
 }
 
-.main-container .tasks-list-wrapper .task-wrapper {
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper {
     display: flex;
     gap: 20px;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    padding: 0 40px;
+    width: 90%;
+    padding: 7px 10px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: rgb(58 0 34 / 11%) 0px 1px 20px 2px;
 }
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper:hover {
+    box-shadow: rgba(61, 0, 36, 0.278) 0px 0px 20px 0px;
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    border: 2px solid #ffe0e5;
+    border-radius: 5px;
+    min-width: 17px;
+    height: 17px;
+    background-color: #ffe0e5;
+    margin: 0;
+    transition: 500ms;
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-checkbox:checked {
+    border: 2px solid #00b8ff8f;
+    background-color: #00b8ff8f;
+    background-image: url(./images/check.svg);
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-text {
+    font-size: 16px;
+    color: #00acef;
+    font-weight: 500;
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-checkbox:checked+.task-text {
+    font-size: 15px;
+    color: #919191;
+    font-weight: 400;
+    text-decoration: line-through;
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions #reminder-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    cursor: pointer;
+    padding: 2px 3px;
+    border: none;
+    background-color: #fec1cc;
+    border-radius: 5px;
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions #reminder-button:hover {
+    background-color: #ffabba;
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions #reminder-button.non-active {
+    background-color: #d6d6d6;
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions .action-button {
+    padding: 7px;
+    border-radius: 13px;
+    background-color: #ff8a8a;
+    color: #ffffff;
+}
+
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions .action-button:hover {
+    background-color: #ff6b6b;
+}
+
+/* конец блока стилей для карточки */
 
 .main-container .footer {
     display: flex;
@@ -130,7 +227,6 @@ main {
     background-color: #00b7ffde;
 }
 
-/*класс для активной кнопки фильтра*/
 .main-container .footer .filter-buttons-wrapper .action-button.active {
     background-color: #00b7ff;
 }
