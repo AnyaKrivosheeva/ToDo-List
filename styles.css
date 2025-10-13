@@ -16,6 +16,8 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    background-color: rgb(231 177 177 / 66%);
+    background-blend-mode: darken;
 }
 
 main {
