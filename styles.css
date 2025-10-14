@@ -3,21 +3,24 @@
     font-family: "Tektur", sans-serif;
 }
 
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: url(./images/pole2.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: brightness(0.8);
+    transition: opacity 0.5s ease;
+}
+
 .action-button {
     border: none;
     border-radius: 15px;
     padding: 10px;
     font-size: 13px;
     cursor: pointer;
-}
-
-body {
-    background-image: url(./images/pole2.png);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-color: rgb(231 177 177 / 66%);
-    background-blend-mode: darken;
 }
 
 main {
@@ -123,6 +126,7 @@ main {
     background-color: white;
     border-radius: 20px;
     box-shadow: rgb(58 0 34 / 11%) 0px 1px 20px 2px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .main-container .tasks-list-wrapper .tasks-list .task-wrapper:hover {
@@ -229,6 +233,7 @@ main {
     background-color: #00b7ffde;
 }
 
+/*активный класс для кнопок фильтра */
 .main-container .footer .filter-buttons-wrapper .action-button.active {
     background-color: #00b7ff;
 }
