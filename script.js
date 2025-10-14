@@ -5,6 +5,7 @@ const addTaskButton = document.getElementById("add-button");
 
 const tasksList = document.querySelector(".tasks-list");
 
+const filterButtons = document.querySelectorAll(".filter");
 const filterAllButton = document.getElementById("all-tasks");
 const filterFulfilledButton = document.getElementById("fulfilled-tasks");
 const filterUnfulfilledButton = document.getElementById("unfulfilled-tasks");
@@ -13,7 +14,7 @@ const filterUnfulfilledButton = document.getElementById("unfulfilled-tasks");
 let tasksArray = [];
 
 
-//     ==Функции==
+// ==Функции==
 
 //функция создания карточки задачи
 function createHTMLTaskWrapper(taskObj) {
@@ -31,6 +32,8 @@ function createHTMLTaskWrapper(taskObj) {
     taskCheckbox.addEventListener("change", () => {
         taskObj.completed = taskCheckbox.checked;
         localStorage.setItem("todoList", JSON.stringify(tasksArray));
+
+        setTimeout(applyCurrentFilter, 500);
     });
     taskContentDiv.append(taskCheckbox);
     let taskText = document.createElement("span");
@@ -70,6 +73,30 @@ function renderTodoList(listArray) {
     });
 };
 
+// функция применения фильтра
+function applyCurrentFilter() {
+    switch (getActiveFilter()) {
+        case "all":
+            renderTodoList(tasksArray);
+            break;
+        case "fulfilled":
+            const fulfilledArray = tasksArray.filter(task => task.completed === true);
+            renderTodoList(fulfilledArray);
+            break;
+        case "unfulfilled":
+            const unfulfilledArray = tasksArray.filter(task => task.completed === false);
+            renderTodoList(unfulfilledArray);
+            break;
+    }
+};
+
+// функция возвращающая активный фильтр 
+function getActiveFilter() {
+    if (filterFulfilledButton.classList.contains("active")) return "fulfilled";
+    if (filterUnfulfilledButton.classList.contains("active")) return "unfulfilled";
+    return "all";
+};
+
 // функция удаления задачи
 async function deleteTask(id) {
     try {
@@ -92,10 +119,39 @@ async function deleteTask(id) {
 
 
 
-//      ==Обработчики событий==
+//  ==Обработчики событий==
+
+// кнопка фильтра всех задач
+filterAllButton.addEventListener("click", () => {
+    filterButtons.forEach(button => button.classList.remove("active"));
+    filterAllButton.classList.add("active");
+
+    renderTodoList(tasksArray);
+});
+
+// кнопка фильтра выполненных задач
+filterFulfilledButton.addEventListener("click", () => {
+    filterButtons.forEach(button => button.classList.remove("active"));
+    filterFulfilledButton.classList.add("active");
+
+    const filteredArray = tasksArray.filter(task => task.completed === true);
+
+    renderTodoList(filteredArray);
+});
+
+//кнопка фильра невыполненных задач
+filterUnfulfilledButton.addEventListener("click", () => {
+    filterButtons.forEach(button => button.classList.remove("active"));
+    filterUnfulfilledButton.classList.add("active");
+
+    const filteredArray = tasksArray.filter(task => task.completed === false);
+
+    renderTodoList(filteredArray);
+});
 
 
-// загрузка стартового состояния приложения или подгрузка сохраненных задач
+
+// == загрузка стартового состояния приложения или подгрузка сохраненных задач ==
 document.addEventListener("DOMContentLoaded", async (event) => {
     event.preventDefault();
 
@@ -114,6 +170,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
             tasksArray = tasks;
             localStorage.setItem("todoList", JSON.stringify(tasksArray));
             renderTodoList(tasksArray);
+            filterAllButton.classList.add("active");
         } catch (err) {
             console.log("Ошибка:", err);
             return null;
