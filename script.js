@@ -13,8 +13,30 @@ const filterUnfulfilledButton = document.getElementById("unfulfilled-tasks");
 // глобальные переменные
 let tasksArray = [];
 
+// классы
+class Task {
+    constructor(title, completed = false, userId = 1, id = Date.now()) {
+        this.title = title;
+        this.completed = completed;
+        this._userId = userId;
+        this._id = id;
+    }
+
+    get userId() {
+        return this._userId;
+    }
+
+    get id() {
+        return this._id;
+    }
+}
 
 // ==Функции==
+
+// функция обновления состояния localStorage
+function updateLocalStorage() {
+    localStorage.setItem("todoList", JSON.stringify(tasksArray));
+};
 
 //функция создания карточки задачи
 function createHTMLTaskWrapper(taskObj) {
@@ -31,7 +53,7 @@ function createHTMLTaskWrapper(taskObj) {
     taskCheckbox.checked = taskObj.completed;
     taskCheckbox.addEventListener("change", () => {
         taskObj.completed = taskCheckbox.checked;
-        localStorage.setItem("todoList", JSON.stringify(tasksArray));
+        updateLocalStorage();
 
         setTimeout(applyCurrentFilter, 500);
     });
@@ -62,7 +84,7 @@ function createHTMLTaskWrapper(taskObj) {
     taskWrapperDiv.append(taskActionsDiv);
 
     return taskWrapperDiv;
-}
+};
 
 // функция рендера списка задач
 function renderTodoList(listArray) {
@@ -109,8 +131,7 @@ async function deleteTask(id) {
         const taskToDelete = document.querySelector(`[data-id="${id}"]`);
         if (taskToDelete) taskToDelete.remove();
         tasksArray = tasksArray.filter(task => task.id !== id);
-        localStorage.setItem("todoList", JSON.stringify(tasksArray));
-        // renderTodoList(tasksArray);
+        updateLocalStorage();
     } catch (err) {
         console.error(err);
         alert("Не удалось удалить задачу :(");
@@ -120,6 +141,35 @@ async function deleteTask(id) {
 
 
 //  ==Обработчики событий==
+
+// обработчик формы
+todoForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const newTaskObject = new Task(todoInput.value.trim());
+    if (!todoInput.value.trim()) return;
+
+    tasksArray.push(newTaskObject);
+    updateLocalStorage();
+
+    tasksList.append(createHTMLTaskWrapper(newTaskObject));
+    todoForm.reset();
+
+    try {
+        const response = await fetch("https://jsonplaceholder.typicode.com/todos", {  //имитируем отправку данных на сервер(поэтому не ждем ответа сервера а сразу рендерим задачу)
+            method: "POST",
+            body: JSON.stringify(newTaskObject),
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+        })
+        if (!response.ok) {
+            throw new Error(`Ошибка HTTP: ${response.status}`);
+        }
+    } catch (err) {
+        console.error(err);
+    }
+});
 
 // кнопка фильтра всех задач
 filterAllButton.addEventListener("click", () => {
@@ -168,7 +218,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
             const tasks = await response.json();
 
             tasksArray = tasks;
-            localStorage.setItem("todoList", JSON.stringify(tasksArray));
+            updateLocalStorage();
             renderTodoList(tasksArray);
             filterAllButton.classList.add("active");
         } catch (err) {
