@@ -51,12 +51,18 @@ main {
     gap: 20px;
 }
 
+.main-container .header .image img {
+    width: 50px;
+    height: 50px;
+}
+
 .main-container .header .title {
     font-family: "Oi", serif;
     font-weight: 400;
     font-style: normal;
     font-size: 35px;
     color: #00b8ff;
+    text-align: center;
 
 }
 
@@ -199,6 +205,11 @@ main {
     border-radius: 5px;
 }
 
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions #reminder-button img {
+    width: 24px;
+    height: 24px;
+}
+
 .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions #reminder-button:hover {
     background-color: #ffabba;
 }
@@ -228,6 +239,11 @@ main {
     gap: 20px;
 }
 
+.main-container .footer .image img {
+    width: 50px;
+    height: 50px;
+}
+
 .main-container .footer .filter-buttons-wrapper {
     display: flex;
     align-items: center;
@@ -246,4 +262,217 @@ main {
 /*активный класс для кнопок фильтра */
 .main-container .footer .filter-buttons-wrapper .action-button.active {
     background-color: #00b7ff;
+}
+
+@media screen and (max-width:900px) {
+    .action-button {
+        border-radius: 15px;
+        padding: 6px;
+        font-size: 11px;
+    }
+
+    .main-container {
+        max-width: 550px;
+        gap: 25px;
+    }
+
+    .main-container .header {
+        gap: 15px;
+    }
+
+    .main-container .header .image img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .main-container .header .title {
+        font-size: 20px;
+    }
+
+    .main-container .form-wrapper .todos-input-form {
+        gap: 15px;
+        padding: 0 10px;
+    }
+
+    .main-container .form-wrapper .todos-input-form .todos-input {
+        border-radius: 14px;
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .main-container .form-wrapper .todos-input-form .action-button {
+        width: 150px;
+        padding: 4px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list {
+        gap: 15px;
+        max-height: 300px;
+        padding: 10px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper {
+        border-radius: 15px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content {
+        gap: 8px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-checkbox {
+        border-radius: 3px;
+        min-width: 13px;
+        height: 13px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-checkbox:checked {
+        background-image: url(./images/check2.svg);
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-text {
+        font-size: 13px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-checkbox:checked+.task-text {
+        font-size: 13px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions .reminder-input {
+        border-radius: 2px;
+        max-width: 80px;
+        font-size: 11px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions #reminder-button img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions .action-button {
+        padding: 5px;
+        border-radius: 10px;
+    }
+
+    .main-container .footer {
+        gap: 15px;
+    }
+
+    .main-container .footer .image img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .main-container .footer .filter-buttons-wrapper {
+        gap: 15px;
+    }
+}
+
+@media screen and (max-width:470px) {
+    .action-button {
+        border-radius: 10px;
+        padding: 6px;
+        font-size: 7px;
+    }
+
+    .main-container {
+        max-width: 300px;
+        gap: 12px;
+    }
+
+    .main-container .header .image img {
+        display: none;
+    }
+
+    .main-container .header .title {
+        font-size: 13px;
+    }
+
+    .main-container .form-wrapper .todos-input-form {
+        gap: 10px;
+        padding: 0 5px;
+    }
+
+    .main-container .form-wrapper .todos-input-form .todos-input {
+        border-radius: 8px;
+        padding: 4px;
+        font-size: 9px;
+    }
+
+    .main-container .form-wrapper .todos-input-form .action-button {
+        width: 90px;
+        padding: 1px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list {
+        gap: 10px;
+        max-height: 200px;
+        padding: 5px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper {
+        border-radius: 9px;
+        gap: 10px;
+        padding: 3px 5px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content {
+        gap: 5px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-checkbox {
+        border-radius: 2px;
+        min-width: 9px;
+        height: 9px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-checkbox:checked {
+        background-image: url(./images/check3.svg);
+        border: 1px solid #00b8ff8f;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-text {
+        font-size: 9px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-content .task-checkbox:checked+.task-text {
+        font-size: 9px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions {
+        gap: 7px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions .reminder-input {
+        max-width: 45px;
+        font-size: 6px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions #reminder-button {
+        padding: 1px;
+        border-radius: 4px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions #reminder-button img {
+        width: 13px;
+        height: 13px;
+    }
+
+    .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions .action-button {
+        padding: 4px;
+        border-radius: 8px;
+    }
+
+    .main-container .footer .image img {
+        display: none;
+    }
+
+    .main-container .footer .filter-buttons-wrapper {
+        gap: 10px;
+    }
+
+    .main-container .footer .filter-buttons-wrapper .action-button {
+        border-radius: 9px;
+        padding: 3px;
+        font-size: 7px;
+    }
 }
