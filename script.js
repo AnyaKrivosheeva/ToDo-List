@@ -15,11 +15,12 @@ let tasksArray = [];
 
 // классы
 class Task {
-    constructor(title, completed = false, userId = 1, id = Date.now()) {
+    constructor(title, completed = false, userId = 1, id = Date.now(), reminderTime = null) {
         this.title = title;
         this.completed = completed;
         this._userId = userId;
         this._id = id;
+        this._reminderTime = reminderTime;
     }
 
     get userId() {
@@ -28,6 +29,18 @@ class Task {
 
     get id() {
         return this._id;
+    }
+
+    set reminderTime(value) {
+        if (value === null) {
+            return;
+        } else {
+            this._reminderTime = value;
+        }
+    }
+
+    get reminderTime() {
+        return this._reminderTime;
     }
 }
 
@@ -73,6 +86,9 @@ function createHTMLTaskWrapper(taskObj) {
     bellImage.setAttribute("alt", "Колокольчик");
     bellImage.setAttribute("style", "width: 24px; height: 24px;");
     reminderButton.append(bellImage);
+    reminderButton.addEventListener("click", () => {
+        createReminderInput(taskActionsDiv, taskObj);
+    });
     taskActionsDiv.append(reminderButton);
     let deleteButton = document.createElement("button");
     deleteButton.setAttribute("class", "action-button");
@@ -84,6 +100,28 @@ function createHTMLTaskWrapper(taskObj) {
     taskWrapperDiv.append(taskActionsDiv);
 
     return taskWrapperDiv;
+};
+
+// функция создания инпута для напоминания
+function createReminderInput(parentDiv, taskObj) {
+    let reminderInput = document.createElement("input");
+    reminderInput.setAttribute("type", "datetime-local");
+    reminderInput.setAttribute("name", "reminder-input");
+    reminderInput.setAttribute("class", "reminder-input");
+
+    parentDiv.prepend(reminderInput);
+
+    reminderInput.addEventListener("change", (event) => {
+        event.preventDefault();
+
+        taskObj.reminderTime = reminderInput.value;
+        updateLocalStorage();
+        // по хорошему должен быть еще post запрос на сервер, о том что поставили напоминание
+        reminderInput.remove();
+        reminderButton.classList.add("non-active");
+        reminderButton.disabled = true;   
+    });
+
 };
 
 // функция рендера списка задач

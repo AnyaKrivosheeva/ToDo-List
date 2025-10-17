@@ -177,6 +177,8 @@ main {
     gap: 10px;
 }
 
+/*TODO: класс для инпута с напоминанием */
+
 .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions #reminder-button {
     display: flex;
     align-items: center;
