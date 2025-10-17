@@ -80,7 +80,6 @@ function createHTMLTaskWrapper(taskObj) {
     let bellImage = document.createElement("img");
     bellImage.setAttribute("src", "./images/bell2.svg");
     bellImage.setAttribute("alt", "Колокольчик");
-    bellImage.setAttribute("style", "width: 24px; height: 24px;");
     reminderButton.append(bellImage);
     reminderButton.addEventListener("click", () => {
         createReminderInput(taskActionsDiv, taskObj, reminderButton);
