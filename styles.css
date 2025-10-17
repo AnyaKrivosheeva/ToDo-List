@@ -83,6 +83,7 @@ main {
     outline: none;
     font-size: 13px;
     box-shadow: rgb(58 0 34 / 11%) 0px 1px 20px 2px;
+    color: #00a4e4;
 }
 
 .main-container .form-wrapper .todos-input-form .todos-input:focus {
@@ -177,7 +178,14 @@ main {
     gap: 10px;
 }
 
-/*TODO: класс для инпута с напоминанием */
+/*класс для инпута времени напоминания */
+.main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions .reminder-input {
+    border: none;
+    background-color: #ffe0e5;
+    border-radius: 3px;
+    color: #00b7ff;
+    outline: none;
+}
 
 .main-container .tasks-list-wrapper .tasks-list .task-wrapper .task-actions #reminder-button {
     display: flex;
