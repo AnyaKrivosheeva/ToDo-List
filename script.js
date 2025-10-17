@@ -32,11 +32,7 @@ class Task {
     }
 
     set reminderTime(value) {
-        if (value === null) {
-            return;
-        } else {
-            this._reminderTime = value;
-        }
+        this._reminderTime = value;
     }
 
     get reminderTime() {
@@ -87,9 +83,22 @@ function createHTMLTaskWrapper(taskObj) {
     bellImage.setAttribute("style", "width: 24px; height: 24px;");
     reminderButton.append(bellImage);
     reminderButton.addEventListener("click", () => {
-        createReminderInput(taskActionsDiv, taskObj);
+        createReminderInput(taskActionsDiv, taskObj, reminderButton);
+
     });
-    taskActionsDiv.append(reminderButton);
+    if (!taskObj.completed) {
+        taskActionsDiv.append(reminderButton);
+
+        if (!taskObj.reminderTime) {
+            reminderButton.disabled = false;
+            reminderButton.classList.remove("non-active");
+        } else {
+            reminderButton.disabled = true;
+            reminderButton.classList.add("non-active");
+
+            const timerId = setInterval(() => checkReminderDate(taskObj, reminderButton, timerId), 10000);
+        }
+    }
     let deleteButton = document.createElement("button");
     deleteButton.setAttribute("class", "action-button");
     deleteButton.textContent = "Удалить";
@@ -103,7 +112,12 @@ function createHTMLTaskWrapper(taskObj) {
 };
 
 // функция создания инпута для напоминания
-function createReminderInput(parentDiv, taskObj) {
+function createReminderInput(parentDiv, taskObj, reminderButton) {
+    if (parentDiv.querySelector(".reminder-input")) {
+        parentDiv.removeChild(parentDiv.querySelector(".reminder-input"));
+        return;
+    }
+
     let reminderInput = document.createElement("input");
     reminderInput.setAttribute("type", "datetime-local");
     reminderInput.setAttribute("name", "reminder-input");
@@ -111,17 +125,58 @@ function createReminderInput(parentDiv, taskObj) {
 
     parentDiv.prepend(reminderInput);
 
-    reminderInput.addEventListener("change", (event) => {
+    reminderInput.addEventListener("change", async (event) => {
         event.preventDefault();
 
-        taskObj.reminderTime = reminderInput.value;
+        const chosenTime = new Date(reminderInput.value);
+        if (chosenTime <= new Date()) {
+            alert("Пока что нет возможности поставить напоминание в прошлом :(");
+            return;
+        }
+        taskObj.reminderTime = chosenTime.toISOString();
         updateLocalStorage();
-        // по хорошему должен быть еще post запрос на сервер, о том что поставили напоминание
+
+        // Имитация запроса к серверу
+        try {
+            const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${taskObj.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify({ reminderTime: taskObj.reminderTime }),
+            });
+
+            if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
+        } catch (err) {
+            console.error("Ошибка при отправке напоминания:", err);
+        }
+
         reminderInput.remove();
         reminderButton.classList.add("non-active");
-        reminderButton.disabled = true;   
+        reminderButton.disabled = true;
+        alert("Напоминание установлено!");
+
+        const timerId = setInterval(() => checkReminderDate(taskObj, reminderButton, timerId), 10000);
     });
 
+};
+
+//функция, проверяющая время напоминания
+function checkReminderDate(taskObj, reminderButton, timerId) {
+    if (!taskObj.reminderTime) return;
+
+    if (Date.now() >= new Date(taskObj.reminderTime)) {
+        setTimeout(() => {
+            alert(`Пора заняться делишками: ${taskObj.title}`);
+        }, 1000);
+        taskObj.reminderTime = null;
+        updateLocalStorage();
+
+        reminderButton.disabled = false;
+        reminderButton.classList.remove("non-active");
+
+        clearInterval(timerId);
+    }
 };
 
 // функция рендера списка задач
@@ -245,7 +300,6 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 
     if (localStorage.getItem("todoList")) {
         tasksArray = JSON.parse(localStorage.getItem("todoList"));
-        renderTodoList(tasksArray);
     } else {
         try {
             const response = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=7");
@@ -257,13 +311,31 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 
             tasksArray = tasks;
             updateLocalStorage();
-            renderTodoList(tasksArray);
-            filterAllButton.classList.add("active");
         } catch (err) {
             console.log("Ошибка:", err);
             return null;
         }
     }
+
+    renderTodoList(tasksArray);
+
+    tasksArray.forEach((task) => {
+        if (task.reminderTime) {
+            const taskWrapper = document.querySelector(`[data-id="${task.id}"]`);
+            if (!taskWrapper) return;
+
+            const reminderButton = taskWrapper.querySelector("#reminder-button");
+            if (reminderButton) {
+                reminderButton.classList.add("non-active");
+                reminderButton.disabled = true;
+            }
+
+            const timerId = setInterval(() => checkReminderDate(task, reminderButton, timerId), 10000);
+        }
+    });
+
+    filterAllButton.classList.add("active");
+
 });
 
 
