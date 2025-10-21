@@ -40,7 +40,7 @@ class Task {
     }
 }
 
-// ==Функции==
+// ==Функции==========
 
 // функция обновления состояния localStorage
 function updateLocalStorage() {
@@ -162,6 +162,7 @@ function createReminderInput(parentDiv, taskObj, reminderButton) {
 
 //функция, проверяющая время напоминания
 function checkReminderDate(taskObj, reminderButton, timerId) {
+    if (!taskObj) return;
     if (!taskObj.reminderTime) return;
 
     if (Date.now() >= new Date(taskObj.reminderTime)) {
