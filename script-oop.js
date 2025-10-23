@@ -8,11 +8,11 @@ class Task {
     }
 
     get userId() {
-        return this._userId;
+        return Number(this._userId);
     }
 
     get id() {
-        return this._id;
+        return Number(this._id);
     }
 
     set reminderTime(value) {
@@ -68,7 +68,14 @@ class TaskList {
         const saved = JSON.parse(localStorage.getItem("todoList"));
 
         if (saved && saved.length) {
-            this.tasks = saved.map(obj => new Task(obj.title, obj.completed, obj._userId, obj._id, obj._reminderTime))
+            this.tasks = saved.map(obj => {
+                const title = obj.title;
+                const completed = obj.completed;
+                const userId = obj._userId ?? obj.userId ?? 1;
+                const id = obj._id ?? obj.id ?? Date.now();
+                const reminderTime = obj._reminderTime ?? obj.reminderTime ?? null;
+                return new Task(title, completed, userId, id, reminderTime);
+            })
         } else {
             await this._fetchGet("https://jsonplaceholder.typicode.com/todos?_limit=7");
         }
@@ -90,10 +97,11 @@ class TaskList {
     }
 
     delete(id) {
-        this.tasks = this.tasks.filter(task => task.id !== id);
+        const numId = Number(id);
+        this.tasks = this.tasks.filter(task => task.id !== numId);
         this.save();
 
-        this._fetchDelete(`https://jsonplaceholder.typicode.com/todos/${id}`);  // имитируем удаление данных на сервере
+        this._fetchDelete(`https://jsonplaceholder.typicode.com/todos/${numId}`);  // имитируем удаление данных на сервере
 
         return this.tasks;
     }
@@ -110,7 +118,7 @@ class TaskList {
     }
 
     toggleTaskComplete(id) {
-        const task = this.tasks.find(task => task.id === id);
+        const task = this.tasks.find(task => task.id === Number(id));
         if (!task) return;
 
         task.toggleComplete();
@@ -118,7 +126,7 @@ class TaskList {
     }
 
     setTaskReminder(id, time) {
-        const task = this.tasks.find(task => task.id === id);
+        const task = this.tasks.find(task => task.id === Number(id));
         if (!task) return;
 
         task.setReminder(time);
@@ -126,7 +134,7 @@ class TaskList {
     }
 
     clearTaskReminder(id) {
-        const task = this.tasks.find(task => task.id === id);
+        const task = this.tasks.find(task => task.id === Number(id));
         if (!task) return;
 
         task.clearReminder();
@@ -140,9 +148,9 @@ class TaskList {
                 throw new Error(`Ошибка: ${response.status}`);
             }
 
-            const tasks = await response.json();
+            const data = await response.json();
 
-            this.tasks = tasks;
+            this.tasks = data.map(obj => new Task(obj.title, obj.completed, obj.userId ?? 1, obj.id, obj.reminderTime ?? null));
             this.save();
         } catch (err) {
             console.log("Ошибка:", err);
@@ -222,7 +230,9 @@ class UI {
         taskCheckbox.checked = task.completed;
 
         taskCheckbox.addEventListener("change", () => {
-            this._handlers.toggleTask?.(task.id);
+            setTimeout(() => {
+                this._handlers.toggleTask?.(task.id);
+            }, 500);
         });
 
         taskContentDiv.append(taskCheckbox);
@@ -244,7 +254,7 @@ class UI {
         reminderButton.append(bellImage);
 
         reminderButton.addEventListener("click", () => {
-            this.createReminderInput(taskActionsDiv, task);
+            this.createReminderInput(taskActionsDiv, task, reminderButton);
         });
 
         if (!task.completed) {
@@ -273,7 +283,7 @@ class UI {
         return taskWrapperDiv;
     }
 
-    createReminderInput(parentDiv, task) {
+    createReminderInput(parentDiv, task, reminderButton) {
         if (parentDiv.querySelector(".reminder-input")) {
             parentDiv.removeChild(parentDiv.querySelector(".reminder-input"));
             return;
@@ -293,9 +303,11 @@ class UI {
 
             this._handlers.setReminder?.(task.id, chosen);
 
-            parentDiv.removeChild(reminderInput);
+            if (parentDiv.contains(reminderInput)) parentDiv.removeChild(reminderInput);
+
             reminderButton.classList.add("non-active");
             reminderButton.disabled = true;
+
             alert("Напоминание установлено!");
         });
     }
@@ -353,6 +365,9 @@ class App {
     async init() {
         await this.taskList.load();
 
+        const savedFilter = localStorage.getItem("currentFilter");
+        this.currentFilter = savedFilter || "all";
+
         this.ui.bindToggleTask(this.handleToggleTask.bind(this));
         this.ui.bindDeleteTask(this.handleDeleteTask.bind(this));
         this.ui.bindSetReminder(this.handleSetReminder.bind(this));
@@ -363,7 +378,10 @@ class App {
             if (task.reminderTime) this._startReminderTimer(task);
         });
 
-        if (this.ui.filterAllButton) this.ui.filterAllButton.classList.add("active");
+        const activeButton = document.getElementById(`${this.currentFilter}-tasks`);
+        if (activeButton) {
+            this.ui.setActiveFilter(activeButton);
+        }
 
         this._render();
     }
@@ -376,12 +394,12 @@ class App {
     handleToggleTask(id) {
         this.taskList.toggleTaskComplete(id);
 
-        const task = this.taskList.tasks.find(task => task.id === id);
+        const task = this.taskList.tasks.find(task => task.id === Number(id));
         if (task && task.completed) {
             this._clearReminderTimer(id);
         }
 
-        this._render;
+        this._render();
     }
 
     handleDeleteTask(id) {
@@ -393,7 +411,7 @@ class App {
     handleSetReminder(id, time) {
         this.taskList.setTaskReminder(id, time);
 
-        const task = this.taskList.tasks.find(task => task.id === id);
+        const task = this.taskList.tasks.find(task => task.id === Number(id));
         if (task && task.reminderTime) {
             this._startReminderTimer(task);
         }
@@ -410,6 +428,7 @@ class App {
         if (!filter) return;
 
         this.currentFilter = filter;
+        localStorage.setItem("currentFilter", filter);
         this._render();
     }
 
