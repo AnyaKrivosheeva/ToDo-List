@@ -16,7 +16,7 @@ class Task {
     }
 
     set reminderTime(value) {
-        return this._reminderTime = value;
+        this._reminderTime = value;
     }
 
     get reminderTime() {
@@ -82,6 +82,7 @@ class TaskList {
     }
 
     save() {
+        this.tasks = this.tasks.filter(task => task instanceof Task);
         localStorage.setItem("todoList", JSON.stringify(this.tasks));
     }
 
